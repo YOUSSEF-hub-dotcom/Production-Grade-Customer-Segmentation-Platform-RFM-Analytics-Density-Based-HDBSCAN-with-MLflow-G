@@ -588,6 +588,7 @@ MLflowModel --> MLflowRegistry
 ✔ FastAPI Production Deployment  
 ✔ Database Logging  
 ✔ Interactive Business Dashboard  
+✔ Observability: Logging, latency monitoring, prediction persistence
 
 ---
 
