@@ -12,7 +12,7 @@ import mlflow.pyfunc
 import logging
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("MLflow")
 
 class RFMClusterWrapper(mlflow.pyfunc.PythonModel):
     def __init__(self, feature_columns, whale_threshold):
@@ -57,7 +57,7 @@ class RFMClusterWrapper(mlflow.pyfunc.PythonModel):
             "is_whale": (noise_mask) & (model_input["Monetary"] >= self.whale_threshold)
         })
 
-        logger.info(f"✅ Segmented {len(results)} customers successfully.")
+        logger.info(f" Segmented {len(results)} customers successfully.")
 
         return results.replace([np.inf, -np.inf, np.nan], 0)
 
@@ -186,10 +186,10 @@ def run_mlflow_lifecycle(rfm, rfm_scaled, rfm_melted, scaler, final_model, min_c
             stage="Production",
             archive_existing_versions=True
         )
-        logger.info(f"🚀 Model v{latest_version} promoted to Production. Performance is stable across density regions.")
+        logger.info(f" Model v{latest_version} promoted to Production. Performance is stable across density regions.")
     else:
         logger.error(
-            f"❌ Quality Gate failed. Reasons: "
+            f" Quality Gate failed. Reasons: "
             f"{'Low DBCV ' if dbcv_score < 0.03 else ''}"
             f"{'Weak Separation ' if s_score <= 0.01 else ''}"
             f"{'Too much Noise' if noise_pct >= 20 else ''}")
