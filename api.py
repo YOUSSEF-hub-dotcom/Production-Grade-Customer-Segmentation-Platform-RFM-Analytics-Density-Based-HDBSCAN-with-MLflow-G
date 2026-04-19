@@ -76,9 +76,9 @@ def get_db():
 
 try:
     model = mlflow.pyfunc.load_model(settings.MODEL_URI)
-    print("✅ Model loaded successfully from Registry")
+    print(" Model loaded successfully from Registry")
 except Exception as e:
-    print(f"❌ Failed to load model: {e}")
+    print(f" Failed to load model: {e}")
 
 
 # Rate Limiting
@@ -152,7 +152,7 @@ async def predict_rfm(
     start_time = time.time()
     client_ip = request.client.host
 
-    logger.info(f"📥 Incoming Request | IP: {client_ip} | Items: {len(data)}")
+    logger.info(f" Incoming Request | IP: {client_ip} | Items: {len(data)}")
 
     try:
         input_df = pd.DataFrame([item.dict() for item in data])
@@ -189,17 +189,17 @@ async def predict_rfm(
             db.commit()
 
             process_time = round(time.time() - start_time, 4)
-            logger.info(f"✅ Success | Logged: {len(log_entries)} | Latency: {process_time}s")
+            logger.info(f" Success | Logged: {len(log_entries)} | Latency: {process_time}s")
 
         except Exception as db_err:
             db.rollback()
-            logger.error(f"❌ DB Failure | Error: {str(db_err)}", exc_info=True)
+            logger.error(f" DB Failure | Error: {str(db_err)}", exc_info=True)
             raise HTTPException(status_code=500, detail="Database insertion failed")
 
         return {"predictions": preds_df.to_dict(orient="records")}
 
     except Exception as e:
-        logger.error(f"🔥 ML Model Error: {str(e)}", exc_info=True)
+        logger.error(f" ML Model Error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Model Inference Error: {str(e)}")
 
 
@@ -238,9 +238,9 @@ def delete_log(
     db.commit()
 
     client_ip = request.client.host
-    logger.info(f"🗑️ Record {record_id} deleted by IP: {client_ip}")
+    logger.info(f" Record {record_id} deleted by IP: {client_ip}")
     return {"detail": f"Record {record_id} deleted successfully"}
 
 @app.get("/")
 def health():
-    return {"status": "API is running 🚀"}
+    return {"status": "API is running "}
