@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("Data)
 
 
 def get_processed_data():
@@ -196,6 +196,5 @@ def get_processed_data():
 
     return df, rfm, rfm_log
 
-# هذا السطر للتأكد من عمل الكود عند تشغيله منفرداً
 if __name__ == "__main__":
     df, rfm, rfm_log = get_processed_data()
