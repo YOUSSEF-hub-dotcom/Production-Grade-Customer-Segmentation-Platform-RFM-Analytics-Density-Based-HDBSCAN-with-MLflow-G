@@ -6,14 +6,14 @@ from MLflow_LifeCycle import run_mlflow_lifecycle
 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("Main")
 from logger_config import setup_logging
 
 setup_logging()
 
 
 def main():
-    logger.info("🚀 Starting RFM Segmentation Pipeline...")
+    logger.info(" Starting RFM Segmentation Pipeline...")
 
     # --- إعداد الـ Argument Parser ---
     parser = argparse.ArgumentParser(description="RFM Customer Segmentation")
@@ -32,7 +32,7 @@ def main():
     min_s = args.min_s
     m_input = args.m_input
 
-    logger.info(f"📍 Configuration: min_c={min_c}, min_s={min_s}, metric={m_input}")
+    logger.info(f" Configuration: min_c={min_c}, min_s={min_s}, metric={m_input}")
 
     try:
         logger.info("\n--- Phase 1: Data Processing ---")
@@ -62,11 +62,11 @@ def main():
             m_input=m_input
         )
 
-        logger.info(f"\n✅ Pipeline Completed Successfully! Run ID: {run_id}")
-        logger.info("🌍 Open MLflow UI (type 'mlflow ui' in terminal) to see the results.")
+        logger.info(f"\n Pipeline Completed Successfully! Run ID: {run_id}")
+        logger.info(" Open MLflow UI (type 'mlflow ui' in terminal) to see the results.")
 
     except Exception as e:
-        logger.error(f"❌ Pipeline failed: {str(e)}")
+        logger.error(f" Pipeline failed: {str(e)}")
 
 
 if __name__ == "__main__":
