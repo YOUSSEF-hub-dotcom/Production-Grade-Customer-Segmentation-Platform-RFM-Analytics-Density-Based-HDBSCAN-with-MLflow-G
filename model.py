@@ -9,7 +9,7 @@ from sklearn.metrics import silhouette_score
 import hdbscan
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("Model")
 
 def run_modeling(rfm, rfm_log, min_c, min_s, m_input):
     logger.info("=========== Building A ML Model ==========")
