@@ -446,7 +446,7 @@ class RFMClusterWrapper(mlflow.pyfunc.PythonModel):
         X = model_input[self.feature_columns]
         X_scaled = self.scaler.transform(X)
 
-        # ✅ Correct HDBSCAN inference
+        # Correct HDBSCAN inference
         labels, probs = hdbscan.approximate_predict(self.model, X_scaled)
 
         is_noise = labels == -1
@@ -484,7 +484,7 @@ with mlflow.start_run(run_name="HDBSCAN_Full_Lifecycle") as run:
     final_model = hdbscan.HDBSCAN(
         **params,
         gen_min_span_tree=True,
-        prediction_data=True   # ⚠️ REQUIRED for approximate_predict
+        prediction_data=True   #  REQUIRED for approximate_predict
     )
     labels = final_model.fit_predict(rfm_scaled)
 
@@ -601,7 +601,7 @@ if QUALITY_GATE:
         stage="Production",
         archive_existing_versions=True
     )
-    print(f"✅ Model v{latest_version} promoted to Production.")
+    print(f" Model v{latest_version} promoted to Production.")
 else:
-    print("❌ Quality Gate failed. Model stays in Staging.")
+    print(" Quality Gate failed. Model stays in Staging.")
 
