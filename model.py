@@ -104,7 +104,7 @@ def run_modeling(rfm, rfm_log, min_c, min_s, m_input):
         logger.info("Clustering completed successfully.")
     except Exception as e:
         logger.error(f"Failed to build HDBSCAN model: {str(e)}", exc_info=True)
-        raise e  # ارفع الخطأ بعد ما تسجله
+        raise e  
 
 
     rfm['Cluster_Probability'] = final_clusterer.probabilities_
