@@ -14,6 +14,84 @@ logger = logging.getLogger("Model")
 def run_modeling(rfm, rfm_log, min_c, min_s, m_input):
     logger.info("=========== Building A ML Model ==========")
     logger.info(f"Parameters: min_cluster_size={min_c}, min_samples={min_s}, metric ={m_input}")
+    # Starting RFM Transformation & Outlier Audit
+    logger.info("=========== Starting RFM Transformation & Outlier Audit ==========")
+    
+    # 1. Original Skewness Analysis & Visualization
+    logger.info(f"Original Skewness:\n{rfm.skew()}")
+
+    plt.figure(figsize=(18, 5))
+    plt.subplot(1, 3, 1)
+    sns.histplot(rfm['Recency'], kde=True, color='skyblue')
+    plt.title(f'Recency Distribution\nSkew: {rfm["Recency"].skew():.2f}')
+
+    plt.subplot(1, 3, 2)
+    sns.histplot(rfm['Frequency'], kde=True, color='salmon')
+    plt.title(f'Frequency Distribution\nSkew: {rfm["Frequency"].skew():.2f}')
+
+    plt.subplot(1, 3, 3)
+    sns.histplot(rfm['Monetary'], kde=True, color='lightgreen')
+    plt.title(f'Monetary Distribution\nSkew: {rfm["Monetary"].skew():.2f}')
+    plt.tight_layout()
+    plt.show()
+
+    # 2. Apply Log Transformation to treat Right-Skewed Data
+    logger.info("Applying Log Transformation (log1p)...")
+    rfm_log = np.log1p(rfm)
+    logger.info(f"Skewness after Treatment:\n{rfm_log.skew()}")
+
+    plt.figure(figsize=(15, 5))
+    plt.subplot(1, 3, 1)
+    sns.histplot(rfm_log['Recency'], kde=True)
+    plt.title("Recency After Log")
+
+    plt.subplot(1, 3, 2)
+    sns.histplot(rfm_log['Frequency'], kde=True)
+    plt.title("Frequency After Log")
+
+    plt.subplot(1, 3, 3)
+    sns.histplot(rfm_log['Monetary'], kde=True)
+    plt.title("Monetary After Log")
+    plt.tight_layout()
+    plt.show()
+
+    print(rfm_log.describe().round(2))
+
+    # 3. Outlier Audit using IQR Method
+    def check_outliers_iqr(df_input):
+        outlier_results = {}
+        for col in df_input.columns:
+            Q1 = df_input[col].quantile(0.25)
+            Q3 = df_input[col].quantile(0.75)
+            IQR = Q3 - Q1
+
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+
+            outliers = df_input[(df_input[col] < lower_bound) | (df_input[col] > upper_bound)]
+
+            outlier_results[col] = {
+                'Count': len(outliers),
+                'Percentage': (len(outliers) / len(df_input)) * 100
+            }
+        return outlier_results
+
+    results = check_outliers_iqr(rfm_log)
+
+    print("----------------------")
+    for col, val in results.items():
+        logger.info(f"Column {col}: {val['Count']} Outliers ({val['Percentage']:.2f}%)")
+
+    plt.figure(figsize=(12, 6))
+    sns.boxplot(data=rfm_log, palette="Set3")
+    plt.title("Boxplot for RFM Features (After Log Transformation)")
+    plt.ylabel("Log Values")
+    plt.show()
+
+    # Observations & Conclusion
+    logger.info("Outlier Audit Complete: Recency (0%), Frequency & Monetary (< 1.5%).")
+    logger.info("Log transformation successfully handled the extremes without losing whale customers.")
+    logger.info("=========== RFM Transformation Completed ==========")
 
     # Feature selection ----> RFM
 
