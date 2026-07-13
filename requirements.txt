@@ -1,0 +1,26 @@
+# ---- Unsupervised Clustering & Machine Learning ----
+hdbscan
+scikit-learn
+
+# ---- Core & Data Science ----
+pandas
+numpy
+
+# ---- MLOps & Experiment Tracking ----
+mlflow
+joblib
+
+# ---- API & Backend ----
+fastapi
+uvicorn
+pydantic
+PyJWT
+slowapi
+SQLAlchemy
+
+# ---- Frontend & Dashboards ----
+streamlit
+requests
+plotly
+matplotlib
+seaborn
