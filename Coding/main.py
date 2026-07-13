@@ -1,4 +1,4 @@
-import argparse  # بنبدل sys بـ argparse
+import argparse  # Replacing sys with argparse for flexible CLI arguments
 from data import get_processed_data
 from eda import run_eda
 from model import run_modeling
@@ -15,18 +15,18 @@ setup_logging()
 def main():
     logger.info(" Starting RFM Segmentation Pipeline...")
 
-    # --- إعداد الـ Argument Parser ---
-    parser = argparse.ArgumentParser(description="RFM Customer Segmentation")
+    # --- Argument Parser Setup ---
+    parser = argparse.ArgumentParser(description="RFM Customer Segmentation Pipeline")
 
     parser.add_argument("--data_path", type=str, default="D:/ALL Projects/Segmentation/Online Retail.xlsx")
     parser.add_argument("--min_c", type=int, default=100)
     parser.add_argument("--min_s", type=int, default=1)
     parser.add_argument("--m_input", type=str, default="euclidean")
 
-    # الخدعة اللي اتعلمناها عشان يشتغل في الـ Interactive والـ Terminal مع بعض
+    # Workaround to support running smoothly in both Interactive notebooks and Terminal
     args, unknown = parser.parse_known_args()
 
-    # سحب القيم من الـ args
+    # Extracting values from args
     data_path = args.data_path
     min_c = args.min_c
     min_s = args.min_s
@@ -36,7 +36,7 @@ def main():
 
     try:
         logger.info("\n--- Phase 1: Data Processing ---")
-        # هنا يفضل تمرر الـ data_path للدالة لو هي بتدعم كدة
+        # Consider passing data_path to get_processed_data() if the function supports it
         df, rfm, rfm_log = get_processed_data()
 
         logger.info("\n--- Phase 2: Exploratory Data Analysis ---")
