@@ -94,6 +94,18 @@ def inspect_rfm_skew_and_outliers(rfm):
         pct = (len(outliers) / len(rfm)) * 100
         logger.info(f"Feature '{col}' -> Potential Outliers: {len(outliers)} ({pct:.2f}%)")
 
+    # 3. Spearman Rank Correlation Analysis (Robust to Outliers)
+    logger.info("Executing Spearman Rank Correlation Analysis...")
+    spearman_corr = rfm[['Recency', 'Frequency', 'Monetary']].corr(method='spearman')
+    logger.info(f"\nSpearman Correlation Matrix:\n{spearman_corr}")
+
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(spearman_corr, annot=True, cmap='viridis', fmt=".2f", linewidths=0.5)
+    plt.title("Spearman Rank Correlation Heatmap (RFM Baseline)")
+    plt.tight_layout()
+    plt.show()
+    plt.close()
+
 
 def run_data_pipeline(file_path):
     """
@@ -102,7 +114,7 @@ def run_data_pipeline(file_path):
     logger.info("============ Starting Segment Data Pipeline ============")
     df_raw = load_data(file_path)
     basic_data_overview(df_raw)
-    df_clean, rfm_matrix = clean_and_preprocess_data(df_raw)
+    df_clean, rfm_matrix = clean_and_process_data(df_raw)
     
     # Smart inspection step triggered post clean aggregation
     inspect_rfm_skew_and_outliers(rfm_matrix)
