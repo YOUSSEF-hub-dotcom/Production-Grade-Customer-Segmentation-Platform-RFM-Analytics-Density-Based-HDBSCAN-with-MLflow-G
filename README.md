@@ -119,17 +119,19 @@ This stage is important because segmentation quality depends heavily on **clean 
 
 ---
 
+---
+
 ## 📊 RFM Feature Engineering
 
 Customer behavior was modeled using **RFM analysis**, a classic but highly effective customer analytics framework.
 
 ### RFM definition
 
-| Metric        | Definition                 | Business meaning                         |
-| ------------- | -------------------------- | ---------------------------------------- |
-| **Recency**   | Days since last purchase   | How recently the customer engaged        |
-| **Frequency** | Number of unique purchases | How often the customer buys              |
-| **Monetary**  | Total spending             | How valuable the customer is financially |
+| Metric        | Definition                 | Business meaning                                        |
+| ------------- | -------------------------- | ------------------------------------------------------- |
+| **Recency** | Days since last purchase   | How recently the customer engaged                       |
+| **Frequency** | Number of unique purchases | How often the customer buys                             |
+| **Monetary** | Total spending             | How valuable the customer is financially                |
 
 ### Calculation logic
 
@@ -139,16 +141,11 @@ For each customer:
 Recency  = snapshot_date - last_purchase_date
 Frequency = number_of_unique_invoices
 Monetary = total_customer_spend
-```
-
-Where the snapshot date is defined as:
-
-```text id="r4p1h6"
-snapshot_date = max(InvoiceDate) + 1 day
-```
-
-This converts raw transactions into a compact behavioral representation that is interpretable both **analytically** and **commercially**.
-
+Where the snapshot date is defined as:Plaintextsnapshot_date = max(InvoiceDate) + 1 day
+📈 Behavioral Correlation Analysis: Pearson vs. SpearmanBefore feeding the engineered RFM metrics into the preprocessing and clustering stages, we conducted a rigorous correlation analysis to map the relationships between customer dimensions.Rather than relying on the standard Pearson Correlation, Spearman Rank Correlation was selected as the core analytical metric.Why Spearman is Mathematically and Commercially Superior Here:Robustness to Extreme Whales (Outliers): Our dataset contains VIP customers with massive spending power (Monetary) and very high transaction counts (Frequency). These outliers represent real business gold, meaning we cannot remove them. Pearson is highly sensitive to extreme raw values and would yield skewed, distorted correlation scores. Spearman converts these raw values to ordinal ranks ($1^{st}, 2^{nd}, 3^{rd} \dots$), neutralizing the impact of massive numerical gaps while fully preserving the underlying order.Capturing Non-Linear Monotonic Relationships: Customer behavior doesn't increase in a strict, uniform linear fashion (e.g., spending exactly $20 more with every extra purchase). Relationships are often exponential or curved. Spearman measures if two variables move in the same direction consistently, regardless of whether that movement forms a straight line.Python# Executed inside inspect_rfm_skew_and_outliers() post-aggregation:
+spearman_corr = rfm[['Recency', 'Frequency', 'Monetary']].corr(method='spearman')
+sns.heatmap(spearman_corr, annot=True, cmap='viridis', fmt=".2f")
+Business Insight Discovered:Frequency & Monetary yield a high Spearman coefficient (~0.81), confirming that driving consistent purchase habits is the most reliable driver of long-term commercial value, completely unaffected by extreme purchasing spikes.Recency has a negative correlation with both Dimensions, verifying that the longer a customer stays away, the lower their overall transaction volume and financial footprint become.
 ---
 
 ## 📈 Exploratory Data Analysis & Behavioral Insights
